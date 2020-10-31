@@ -42,7 +42,6 @@ type Unit    = unit         // 1
 type Void                   // 0
 ```
 
-
 ::: notes
 Notation is mix of Haskell and Typescript
 :::
@@ -52,11 +51,12 @@ Ideally:
 ```typescript
 type ProductType = Factor x Factor
 ```
-![](img/cartesian-product.svg)
 
-::: notes
+![](img/cartesian-product.svg){ width=40% }
+
+<small style="font-size: 9pt">
 By Quartl - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=22436861
-:::
+</small>
 
 ## Example 1
 ```typescript
@@ -96,14 +96,14 @@ Boolean x Void = (true,?)                     ~ Void
 Ideally:
 ```typescript
 type SumType = Summand + Summand
+<small>also Choice Type, Tagged Union, Discriminated Union
 ```
-also Choice Type, Tagged Union, Discriminated Union
 
-![](img/disjoint-sets.svg)
+![](img/disjoint-sets.svg){ width=40% }
 
-::: notes
+<small style="font-size: 9pt">
 By Stephan Kulla (User:Stephan Kulla) - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=14978640
-:::
+</small>
 
 ## Example 1
 ```typescript
