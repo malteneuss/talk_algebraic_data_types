@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="John Doe">
-  <meta name="dcterms.date" content="2017-06-21">
-  <title>Demo Slide</title>
+  <meta name="author" content="Malte Neuss">
+  <title>Algebraic Data Types (ADT)</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -82,28 +81,210 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
-  <link rel="stylesheet" href="./reveal.js/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="./reveal.js/dist/theme/sky.css" id="theme">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Demo Slide</h1>
-  <p class="author">John Doe</p>
-  <p class="date">June 21, 2017</p>
+  <h1 class="title">Algebraic Data Types (ADT)</h1>
+  <p class="author">Malte Neuss</p>
 </section>
 
-<section id="foo" class="slide level1">
-<h1>Foo</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&quot;hello world&quot;</span>)</span></code></pre></div>
+<section id="algebraic-data-types" class="slide level2">
+<h2>Algebraic Data Types</h2>
+<p>Numbers:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">=</span>  <span class="dv">3</span> <span class="op">*</span> <span class="dv">2</span></span></code></pre></div>
+<p>Types:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>interface User <span class="op">=</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  isLoggedIn<span class="op">:</span> Boolean</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  email<span class="op">:</span>      <span class="dt">string</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>}</span></code></pre></div>
+<aside class="notes">
+<p>Algebra = Lehre von Symbol-Konstellation und Manipulation</p>
+</aside>
 </section>
-<section id="bar" class="slide level1">
-<h1>Bar</h1>
+<section id="kinds-of-types" class="slide level2">
+<h2>Kinds Of Types</h2>
 <ul>
-<li>test</li>
-<li>test</li>
+<li>Product Type*</li>
+<li>Sum Type*</li>
+<li>Exponential Type*</li>
+<li>Recursive Type</li>
+<li>Linear Type</li>
+<li>Dependent Type …</li>
 </ul>
+<p><em>Make illegal state unrepresentable</em></p>
+</section>
+<section id="basic-types" class="slide level2">
+<h2>Basic Types</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">type</span> String <span class="op">=</span> <span class="st">&quot;&quot;</span> <span class="op">|</span> <span class="st">&quot;a&quot;</span> <span class="op">|</span> <span class="st">&quot;b&quot;</span><span class="op">..</span> <span class="co">// infty</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">type</span> Int    <span class="op">=</span> <span class="op">..-</span><span class="dv">1</span> <span class="op">|</span> <span class="dv">0</span> <span class="op">|</span> <span class="fl">1.</span><span class="op">.</span>   <span class="co">// 2^32</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="op">..</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">type</span> Boolean <span class="op">=</span> true <span class="op">|</span> false <span class="co">// 2</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">type</span> Unit    <span class="op">=</span> unit         <span class="co">// 1</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="kw">type</span> Void                   <span class="co">// 0</span></span></code></pre></div>
+<aside class="notes">
+<p>Notation is mix of Haskell and Typescript</p>
+</aside>
+</section>
+<section id="product-type" class="slide level2">
+<h2>Product Type</h2>
+<p>Ideally:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">type</span> ProductType <span class="op">=</span> Factor x Factor</span></code></pre></div>
+<p><img data-src="img/cartesian-product.svg" /></p>
+<aside class="notes">
+<p>By Quartl - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=22436861</p>
+</aside>
+</section>
+<section id="example-1" class="slide level2">
+<h2>Example 1</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>interface ProductType {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>  factor1<span class="op">:</span> Boolean<span class="op">;</span> <span class="co">// 2</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>  factor2<span class="op">:</span> Boolean<span class="op">;</span> <span class="co">// 2</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>Boolean x Boolean </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="op">=</span> (true<span class="op">,</span>true) (false<span class="op">,</span>false) (true<span class="op">,</span>false) (false<span class="op">,</span>true)</span></code></pre></div>
+</section>
+<section id="example-2" class="slide level2">
+<h2>Example 2</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>interface ProductType {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  factor1<span class="op">:</span> Boolean<span class="op">;</span> <span class="co">// 2</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  factor2<span class="op">:</span> Unit<span class="op">;</span>    <span class="co">// 1</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>Boolean x Unit <span class="op">=</span> (true<span class="op">,</span>unit) (false<span class="op">,</span>unit)    <span class="op">~</span> Boolean</span></code></pre></div>
+</section>
+<section id="example-3" class="slide level2">
+<h2>Example 3</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>interface ProductType {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>  factor1<span class="op">:</span> Boolean<span class="op">;</span> <span class="co">// 2</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>  factor2<span class="op">:</span> Void<span class="op">;</span>    <span class="co">// 0</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>Boolean x Void <span class="op">=</span> (true<span class="op">,?</span>)                     <span class="op">~</span> Void</span></code></pre></div>
+</section>
+<section id="sum-type" class="slide level2">
+<h2>Sum Type</h2>
+<p>Ideally:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">type</span> SumType <span class="op">=</span> Summand <span class="op">+</span> Summand</span></code></pre></div>
+<p>also Choice Type, Tagged Union, Discriminated Union</p>
+<p><img data-src="img/disjoint-sets.svg" /></p>
+<aside class="notes">
+<p>By Stephan Kulla (User:Stephan Kulla) - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=14978640</p>
+</aside>
+</section>
+<section id="example-1-1" class="slide level2">
+<h2>Example 1</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">type</span> SumType <span class="op">=</span> Boolean <span class="op">|</span> Unit </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="co">//     3           2      1</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>SumType <span class="op">=</span> true false unit </span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">type</span> SumType <span class="op">=</span> BoolTag Boolean <span class="op">|</span> UnitTag Unit </span></code></pre></div>
+</section>
+<section id="example-2-1" class="slide level2">
+<h2>Example 2</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">type</span> BoolOpt  <span class="op">=</span> Boolean <span class="op">|</span> Unit </span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">type</span> BoolOpt  <span class="op">=</span> Boolean <span class="op">|</span> None</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="kw">type</span> Option<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">=</span> <span class="fu">Some</span>(T) <span class="op">|</span> None</span></code></pre></div>
+</section>
+<section id="example-3-1" class="slide level2">
+<h2>Example 3</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="kw">type</span> SumType <span class="op">=</span> Boolean <span class="op">|</span> Void </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="co">//     2           2      0</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>SumType <span class="op">=</span> true false                            <span class="op">~</span> Boolean </span></code></pre></div>
+</section>
+<section id="exponential-type" class="slide level2">
+<h2>Exponential Type</h2>
+<p>“Ideally:”</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a><span class="kw">type</span> ExpoType <span class="op">=</span> Base<span class="op">^</span>Exponent</span></code></pre></div>
+</section>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="co">//                   Exponent         Base</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="kw">type</span> Exponential <span class="op">=</span>    Trilean  <span class="kw">=&gt;</span>   Boolean</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a><span class="co">//     2^3                3             2</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="co">//                    t1,t2,t3      true,false</span></span></code></pre></div>
+</section>
+<section id="typescript-choice-types" class="slide level2">
+<h2>Typescript Choice Types</h2>
+<p>CODE EXAMPLE</p>
+</section>
+<section id="type-alias" class="slide level2">
+<h2>Type Alias</h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="kw">type</span> Euro <span class="op">=</span> <span class="dt">number</span><span class="op">;</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">toNumber</span>(e<span class="op">:</span> Euro)<span class="op">:</span> <span class="dt">number</span> {</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>    return e<span class="op">;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>}</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>    <span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// allowed</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>}</span></code></pre></div>
+<aside class="notes">
+<p>can be freely interchanged</p>
+</aside>
+</section>
+<section id="type-wrapper" class="slide level2">
+<h2>Type Wrapper</h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="kw">type</span> Euro <span class="op">=</span>  { value<span class="op">:</span> <span class="dt">number</span> }<span class="op">;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">toNumber</span>(e<span class="op">:</span> Euro)<span class="op">:</span> <span class="dt">number</span> {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a>    return e<span class="op">;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>}</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a>    <span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// error</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a>    <span class="fu">toNumber</span>( {value<span class="op">:</span> <span class="dv">2</span>} )<span class="op">;</span> <span class="co">// allowed, but overhead</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true"></a>}</span></code></pre></div>
+<aside class="notes">
+<p>runtime overhead</p>
+</aside>
+</section>
+<section id="workaround" class="slide level2">
+<h2>Workaround</h2>
+<div class="sourceCode" id="cb24"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="kw">type</span> Euro <span class="op">=</span> <span class="dt">number</span> <span class="op">&amp;</span> { <span class="kw">readonly</span> __tag<span class="op">:</span> unique <span class="dt">symbol</span> }<span class="op">;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">toNumber</span>(e<span class="op">:</span> Euro)<span class="op">:</span> <span class="dt">number</span> {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>    return e<span class="op">;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>}</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a><span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// error</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a><span class="fu">toNumber</span>(<span class="dv">2</span> <span class="im">as</span> Euro)<span class="op">;</span> <span class="co">// allowed, no overhead</span></span></code></pre></div>
+<aside class="notes">
+<p>source https://kubyshkin.name/posts/newtype-in-typescript/</p>
+</aside>
+</section>
+<section id="typewrapper-in-ddd" class="slide level2">
+<h2>TypeWrapper in DDD</h2>
+<div class="sourceCode" id="cb25"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">type</span> RawId       <span class="op">=</span> <span class="dt">string</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="kw">type</span> ValidatedId <span class="op">=</span> <span class="dt">string</span> <span class="op">&amp;</span> { <span class="kw">readonly</span> __tag<span class="op">:</span> unique <span class="dt">symbol</span> }<span class="op">;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">validate</span>(id<span class="op">:</span> RawId)<span class="op">:</span> ValidatedId {</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a>  <span class="co">// checks...</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>  return id <span class="im">as</span> ValidatedId<span class="op">;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true"></a>}</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">fetchUser</span>(id<span class="op">:</span> ValidatedId) {<span class="op">..</span>}</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a><span class="fu">fetchUser</span>(<span class="st">&quot;123&quot;</span>)<span class="op">;</span> <span class="co">// error</span></span></code></pre></div>
+<p><img data-src="img/subset.svg" /></p>
+</section>
+<section id="further-study" class="slide level2">
+<h2>Further Study</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="img/category_theory.svg" style="width:90.0%" /></p>
+</div><div class="column" style="width:40%;">
+<p>Haskell Rust</p>
+<p>Category Theory</p>
+<ul>
+<li>Product Type</li>
+<li>Sum Type</li>
+<li>Exponential Type</li>
+<li>Functor (map)</li>
+<li>Monad (Optional, Streams, RxJs, flatMap)</li>
+</ul>
+</div>
+</div>
 </section>
     </div>
   </div>
