@@ -133,10 +133,8 @@
 <h2>Product Type</h2>
 <p>Ideally:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">type</span> ProductType <span class="op">=</span> Factor x Factor</span></code></pre></div>
-<p><img data-src="img/cartesian-product.svg" /></p>
-<aside class="notes">
-<p>By Quartl - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=22436861</p>
-</aside>
+<p><img data-src="img/cartesian-product.svg" style="width:40.0%" /></p>
+<p><small style="font-size: 9pt"> By Quartl - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=22436861 </small></p>
 </section>
 <section id="example-1" class="slide level2">
 <h2>Example 1</h2>
@@ -167,11 +165,9 @@
 <h2>Sum Type</h2>
 <p>Ideally:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">type</span> SumType <span class="op">=</span> Summand <span class="op">+</span> Summand</span></code></pre></div>
-<p>also Choice Type, Tagged Union, Discriminated Union</p>
-<p><img data-src="img/disjoint-sets.svg" /></p>
-<aside class="notes">
-<p>By Stephan Kulla (User:Stephan Kulla) - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=14978640</p>
-</aside>
+<p><small>also Choice Type, Tagged Union, Discriminated Union</small></p>
+<p><img data-src="img/disjoint-sets.svg" style="width:40.0%" /></p>
+<p><small style="font-size: 9pt"> By Stephan Kulla (User:Stephan Kulla) - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=14978640 </small></p>
 </section>
 <section id="example-1-1" class="slide level2">
 <h2>Example 1</h2>
@@ -206,7 +202,7 @@
 </section>
 <section id="typescript-choice-types" class="slide level2">
 <h2>Typescript Choice Types</h2>
-<p>CODE EXAMPLE</p>
+<p>REAL EXAMPLE</p>
 </section>
 <section id="type-alias" class="slide level2">
 <h2>Type Alias</h2>
@@ -217,7 +213,7 @@
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>}</span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>    <span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// allowed</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>    <span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// allowed ↯</span></span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>}</span></code></pre></div>
 <aside class="notes">
 <p>can be freely interchanged</p>
@@ -232,8 +228,8 @@
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>}</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a>    <span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// error</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a>    <span class="fu">toNumber</span>( {value<span class="op">:</span> <span class="dv">2</span>} )<span class="op">;</span> <span class="co">// allowed, but overhead</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a>    <span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// error ✓ </span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a>    <span class="fu">toNumber</span>( {value<span class="op">:</span> <span class="dv">2</span>} )<span class="op">;</span> <span class="co">// allowed ✓, but overhead ↯</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true"></a>}</span></code></pre></div>
 <aside class="notes">
 <p>runtime overhead</p>
@@ -247,15 +243,13 @@
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>    return e<span class="op">;</span></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>}</span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a><span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// error</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a><span class="fu">toNumber</span>(<span class="dv">2</span> <span class="im">as</span> Euro)<span class="op">;</span> <span class="co">// allowed, no overhead</span></span></code></pre></div>
-<aside class="notes">
-<p>source https://kubyshkin.name/posts/newtype-in-typescript/</p>
-</aside>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a><span class="fu">toNumber</span>(<span class="dv">2</span>)<span class="op">;</span> <span class="co">// error ✓ </span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a><span class="fu">toNumber</span>(<span class="dv">2</span> <span class="im">as</span> Euro)<span class="op">;</span> <span class="co">// allowed ✓,  no overhead ✓ </span></span></code></pre></div>
+<p><small style="font-size: 9pt"> Source https://kubyshkin.name/posts/newtype-in-typescript/ </small></p>
 </section>
 <section id="typewrapper-in-ddd" class="slide level2">
 <h2>TypeWrapper in DDD</h2>
-<div class="sourceCode" id="cb25"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">type</span> RawId       <span class="op">=</span> <span class="dt">string</span> </span>
+<div class="sourceCode" id="cb25" style="margin-bottom: 0"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">type</span> RawId       <span class="op">=</span> <span class="dt">string</span> </span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="kw">type</span> ValidatedId <span class="op">=</span> <span class="dt">string</span> <span class="op">&amp;</span> { <span class="kw">readonly</span> __tag<span class="op">:</span> unique <span class="dt">symbol</span> }<span class="op">;</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a><span class="kw">function</span> <span class="fu">validate</span>(id<span class="op">:</span> RawId)<span class="op">:</span> ValidatedId {</span>
@@ -267,24 +261,33 @@
 <span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a></span>
 <span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a><span class="fu">fetchUser</span>(<span class="st">&quot;123&quot;</span>)<span class="op">;</span> <span class="co">// error</span></span></code></pre></div>
 <p><img data-src="img/subset.svg" /></p>
+<aside class="notes">
+<p>Image is public domain</p>
+</aside>
 </section>
 <section id="further-study" class="slide level2">
 <h2>Further Study</h2>
 <div class="columns">
-<div class="column" style="width:40%;">
-<p><img data-src="img/category_theory.svg" style="width:90.0%" /></p>
-</div><div class="column" style="width:40%;">
-<p>Haskell Rust</p>
-<p>Category Theory</p>
+<div class="column" style="width:50%;">
+<p><img data-src="img/category_theory.svg" style="width:70.0%" /></p>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Category Theory
 <ul>
 <li>Product Type</li>
 <li>Sum Type</li>
 <li>Exponential Type</li>
 <li>Functor (map)</li>
-<li>Monad (Optional, Streams, RxJs, flatMap)</li>
+<li>Monad (flatMap, Optional, Streams, RxJs)</li>
+</ul></li>
+<li>Haskell</li>
+<li>Rust</li>
 </ul>
 </div>
 </div>
+<aside class="notes">
+<p>Image is public domain</p>
+</aside>
 </section>
     </div>
   </div>

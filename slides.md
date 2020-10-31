@@ -96,8 +96,8 @@ Boolean x Void = (true,?)                     ~ Void
 Ideally:
 ```typescript
 type SumType = Summand + Summand
-<small>also Choice Type, Tagged Union, Discriminated Union
 ```
+<small>also Choice Type, Tagged Union, Discriminated Union</small>
 
 ![](img/disjoint-sets.svg){ width=40% }
 
@@ -152,7 +152,7 @@ type Exponential =    Trilean  =>   Boolean
 ```
 
 ## Typescript Choice Types 
-CODE EXAMPLE
+REAL EXAMPLE
 
 ## Type Alias
 ```typescript
@@ -163,7 +163,7 @@ function toNumber(e: Euro): number {
 }
 
 function main() {
-    toNumber(2); // allowed
+    toNumber(2); // allowed ↯
 }
 ```
 
@@ -180,8 +180,8 @@ function toNumber(e: Euro): number {
 }
 
 function main() {
-    toNumber(2); // error
-    toNumber( {value: 2} ); // allowed, but overhead
+    toNumber(2); // error ✓ 
+    toNumber( {value: 2} ); // allowed ✓, but overhead ↯
 }
 ```
 
@@ -198,15 +198,15 @@ function toNumber(e: Euro): number {
     return e;
 }
 
-toNumber(2); // error
-toNumber(2 as Euro); // allowed, no overhead
+toNumber(2); // error ✓ 
+toNumber(2 as Euro); // allowed ✓,  no overhead ✓ 
 ```
-::: notes
-source https://kubyshkin.name/posts/newtype-in-typescript/
-:::
+<small style="font-size: 9pt">
+Source https://kubyshkin.name/posts/newtype-in-typescript/
+</small>
 
 ## TypeWrapper in DDD
-```typescript
+```{ .typescript style="margin-bottom: 0" }
 type RawId       = string 
 type ValidatedId = string & { readonly __tag: unique symbol };
 
@@ -221,22 +221,30 @@ fetchUser("123"); // error
 ```
 ![](img/subset.svg)
 
+::: notes
+Image is public domain
+:::
+
 
 ## Further Study
-:::::::::::::: {.columns}
-::: {.column width="40%"}
-![](img/category_theory.svg){ width=90% }
+:::::::::::::: columns
+::: {.column width="50%"}
+![](img/category_theory.svg){ width=70% }
 :::
-::: {.column width="40%"}
-Haskell
-Rust
+::: {.column width="50%"}
+* Category Theory
+  * Product Type
+  * Sum Type
+  * Exponential Type
+  * Functor (map)
+  * Monad (flatMap, Optional, Streams, RxJs)
 
-Category Theory
+* Haskell
+* Rust
 
-* Product Type
-* Sum Type
-* Exponential Type
-* Functor (map)
-* Monad (Optional, Streams, RxJs, flatMap)
 :::
 ::::::::::::::
+
+::: notes
+Image is public domain
+:::
