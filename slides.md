@@ -1,103 +1,185 @@
 ---
 author: Malte Neuss
 title: Algebraic Data Types (ADT)
+# revealjs
+# https://github.com/jgm/pandoc-templates/blob/master/default.revealjs
+theme: sky
+transition: none
+slideNumber: true
 ---
 
-## Algebraic Data Types
+## Algebra
+
 Numbers:
-```typescript
+
+```python
 2 + 2 + 2 =  3 * 2
 ```
 
+. . .
+
 Types:
-```typescript
-interface User = {
-  isLoggedIn: Boolean
-  email:      string
-}
+
+```python
+class User 
+  verified: Bool
+  email:    String
 ```
 
 ::: notes
 Algebra = Lehre von Symbol-Konstellation und Manipulation
 :::
 
-## Kinds Of Types
-* Product Type*
-* Sum Type* 
-* Exponential Type*
-* Recursive Type
-* Linear Type
-* Dependent Type
-...
+## Content 
 
-*Make illegal state unrepresentable*
+::: incremental
 
-## Basic Types 
-```typescript 
-type String = "" | "a" | "b".. // infty
-type Int    = ..-1 | 0 | 1..   // 2^32
-..
-type Boolean = true | false // 2
-type Unit    = unit         // 1
-type Void                   // 0
-```
+* Product Type
+* Sum Type
+* Examples
 
-::: notes
-Notation is mix of Haskell and Typescript
 :::
 
-## Product Type
-Ideally:
-```typescript
-type ProductType = Factor x Factor
+. . .
+
+> *Make illegal state unrepresentable*
+
+## Basic Types 
+```
+type Void:                      // 0
+type Unit: unit                 // 1
+type Bool: true, false          // 2
+...
+type String: "", "a", "b" ...   // infty
 ```
 
-![](img/cartesian-product.svg){ width=40% }
+## Product Type
+
+```
+type ProductType = Type x Type
+```
+
+. . .
+
+```python
+type User = Bool x String
+```
+
+. . .
+
+```python
+class User 
+  verified: Bool
+  email:    String
+```
+
+## Product Type
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+
+Type:
+
+```python
+type User = Bool x String
+```
+
+Values:
+
+```python
+User(true,  "no@reply.com")
+User(false, "no@reply.com")
+User(true,  "ok@reply.com")
+User(false, "ok@reply.com")
+...
+```
+
+:::
+::: {.column width="50%"}
+
+![](img/cartesian-product.svg){ width=90% }
 
 <small style="font-size: 9pt">
 By Quartl - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=22436861
 </small>
 
-## Example 1
-```typescript
-interface ProductType {
-  factor1: Boolean; // 2
-  factor2: Boolean; // 2
-}
-```
-```typescript
-Boolean x Boolean 
-= (true,true) (false,false) (true,false) (false,true)
+:::
+::::::::::::::
+
+## Algebra
+```python
+Bool x Bool: (true,true) (false,false) (true,false) (false,true)
+   2 x 2   =  4
 ```
 
-## Example 2
-```typescript
-interface ProductType {
-  factor1: Boolean; // 2
-  factor2: Unit;    // 1
-}
-```
-```typescript
-Boolean x Unit = (true,unit) (false,unit)    ~ Boolean
+. . .
+
+```python
+Bool x Unit: (true,unit) (false,unit)    ~ Boolean
+   2 x 1   =  2                              
 ```
 
-## Example 3
-```typescript
-interface ProductType {
-  factor1: Boolean; // 2
-  factor2: Void;    // 0
-}
-```
-```typescript
-Boolean x Void = (true,?)                     ~ Void
+. . .
+
+```python
+Bool x Void: (true,???)                  ~ Void
+   2 x 0   =  0
 ```
 
 ## Sum Type
-Ideally:
-```typescript
-type SumType = Summand + Summand
+
+```python
+type SumType = Type + Type
 ```
-<small>also Choice Type, Tagged Union, Discriminated Union</small>
+
+. . .
+
+```python
+type ID = Int + String
+```
+
+. . .
+
+```python
+type ID = Int | String                           Typescript
+```
+
+. . .
+
+```python
+     ID = Union[int, str]                        Python
+```
+
+. . .
+
+```python
+sealed trait ID                                  Scala
+
+case class IntID(Int)       extends ID
+case class StringID(String) extends ID
+```
+
+## Sum Type
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+
+Type:
+
+```python
+type ID = Int | String
+```
+
+Values:
+
+```python
+myID: ID = 1                   ✓
+myID: ID = "123e4567-e89b..."  ✓
+...
+```
+
+:::
+::: {.column width="50%"}
 
 ![](img/disjoint-sets.svg){ width=40% }
 
@@ -105,142 +187,244 @@ type SumType = Summand + Summand
 By Stephan Kulla (User:Stephan Kulla) - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=14978640
 </small>
 
-## Example 1
-```typescript
-type SumType = Boolean | Unit 
-//     3           2      1
-```
-```typescript
-SumType = true false unit 
-```
-```typescript
-type SumType = BoolTag Boolean | UnitTag Unit 
-```
-
-## Example 2
-```typescript
-type BoolOpt  = Boolean | Unit 
-```
-```typescript
-type BoolOpt  = Boolean | None
-```
-```typescript
-type Option<T> = Some(T) | None
-```
-
-## Example 3
-```typescript
-type SumType = Boolean | Void 
-//     2           2      0
-```
-```typescript
-SumType = true false                            ~ Boolean 
-```
-
-## Exponential Type
-"Ideally:"
-```typescript
-type ExpoType = Base^Exponent
-```
-
-## Example
-```typescript
-//                   Exponent         Base
-type Exponential =    Trilean  =>   Boolean
-//     2^3                3             2
-//                    t1,t2,t3      true,false
-```
-
-## Typescript Choice Types 
-REAL EXAMPLE
-
-## Type Alias
-```typescript
-type Euro = number; 
-
-function toNumber(e: Euro): number {
-    return e;
-}
-
-function main() {
-    toNumber(2); // allowed ↯
-}
-```
-
-::: notes
-can be freely interchanged
 :::
+::::::::::::::
 
-## Type Wrapper
+## Algebra
+
+```python
+Bool | Unit: true, false, unit
+   2 + 1   =  3 
+```
+
+. . .
+
+```python
+Bool | Void: true, false          ~ Bool
+   2 + 0   =  2                     2
+```
+
+. . .
+
+```python
+Bool | Int:  true, false, 1, 2, 3, ...
+   2 + 2^64  
+```
+
+## Unit Type
+
+```python
+type BoolOpt     = Bool | Unit 
+
+type Optional[T] =   T  | Unit 
+```
+
+. . .
+
 ```typescript
-type Euro =  { value: number };
-
-function toNumber(e: Euro): number {
-    return e;
-}
-
-function main() {
-    toNumber(2); // error ✓ 
-    toNumber( {value: 2} ); // allowed ✓, but overhead ↯
-}
+type Optional[T] =    T | undefined              Typescript
 ```
 
-::: notes
-runtime overhead
-:::
+. . .
 
-
-## Workaround
-```typescript
-type Euro = number & { readonly __tag: unique symbol };
-
-function toNumber(e: Euro): number {
-    return e;
-}
-
-toNumber(2); // error ✓ 
-toNumber(2 as Euro); // allowed ✓,  no overhead ✓ 
+```python
+     Optional[T] = Union[T, NoneType]            Python
 ```
-<small style="font-size: 9pt">
-Source https://kubyshkin.name/posts/newtype-in-typescript/
-</small>
 
-## TypeWrapper in DDD
-```{ .typescript style="margin-bottom: 0" }
-type RawId       = string 
-type ValidatedId = string & { readonly __tag: unique symbol };
+. . .
 
-function validate(id: RawId): ValidatedId {
-  // checks...
-  return id as ValidatedId;
-}
+```scala
+sealed trait Option[A]                           Scala
 
-function fetchUser(id: ValidatedId) {..}
-
-fetchUser("123"); // error
+case class  Some[A] extends Option[A]
+case object None    extends Option[A]
 ```
-![](img/subset.svg)
 
-::: notes
-Image is public domain
-:::
+## Examples
+
+Modelling Data
+
+> Make illegal state unrepresentable
+
+## No ADT: Error codes
+
+```python
+class UserResult:
+  error_code: int             # 0 means ok
+  user:       User            # contains dummy data on error
+
+def fetchUser() -> UserResult:
+  # network call
+```
+
+. . .
+
+```python
+myUser = fetchUser()
+
+if myUser.error_code == 0:
+  # do sth.
+  # what if myUser.user still has dummy data?
+else
+  # do fallback
+```
+
+## No ADT: Error codes
+
+```python
+class UserResult:
+  error_code: int             # 0 means ok
+  user:       User            # contains dummy data on error
+```
+
+. . .
+
+Representable valid values:
+
+```python
+UserResult(0, User("John"))
+UserResult(0, User("Jane"))
+UserResult(1, User("dummy"))
+...
+
+```
+
+. . .
+
+Representable invalid values:
+
+```
+UserResult(1, User("John"))
+UserResult(0, User("dummy"))
+```
+
+## No ADT: Exceptions
+
+```python
+def fetchUser() -> User:
+    # raise Exception on error
+```
+
+. . .
+
+```python
+myUser = fetchUser()
+# do sth.
+```
+
+. . .
+
+```python
+try:
+  myUser = fetchUser()
+  # do sth.
+except ...
+```
 
 
-## Further Study
-:::::::::::::: columns
+## ADT: Optional
+
+```python
+type Optional[T] = NoneType | T
+
+def fetchUser() -> Optional[User]:
+    # return None on error
+```
+
+. . .
+
+```python
+myUser = fetchUser()
+
+if   isinstance(myUser, User):
+  # do sth.
+elif isinstance(myUser, NoneType):
+  # do fallback
+```
+
+## ADT: Either 
+
+```python
+type Either[E,T] = E | T
+
+def fetchUser() -> Either[Error, User]:
+    # return Error value on error
+```
+
+. . .
+
+```python
+myUser = fetchUser()
+
+if   isinstance(myUser, User):
+  # do sth.
+elif isinstance(myUser, Error):
+  # analyze reason
+```
+
+
+## ADT: Custom 
+
+```python
+type User = Anonymous | LoggedIn
+
+def fetchUser() -> User:
+```
+
+. . .
+
+```python
+myUser = fetchUser()
+
+if   isinstance(myUser, Anonymous):
+  # do anonymous stuff.
+elif isinstance(myUser, LoggedIn):
+  # do logged-in stuff.
+```
+
+## ADT: Custom extended
+
+```python
+type User = Anonymous | LoggedIn | Admin
+                                 # !new!
+def fetchUser() -> User:
+```
+
+. . .
+
+```python
+myUser = fetchUser()
+
+if   isinstance(myUser, Anonymous):
+  # do anonymous stuff.
+elif isinstance(myUser, LoggedIn):
+  # do logged-in stuff.
+!!! Compiler error: forgot Admin case !!!
+```
+
+
+## Further Topics
+:::::::::::::: {.columns}
 ::: {.column width="50%"}
-![](img/category_theory.svg){ width=70% }
-:::
-::: {.column width="50%"}
-* Category Theory
-  * Product Type
-  * Sum Type
-  * Exponential Type
-  * Functor (map)
-  * Monad (flatMap, Optional, Streams, RxJs)
 
+* Scala
 * Haskell
 * Rust
+* Dependent Types
+* Linear Types
+
+:::
+::: {.column width="50%"}
+
+<small>
+Category Theory
+</small>
+
+![](img/category_theory.svg){ width=50% }
+
+* Functor (map)
+* Monad (flatMap)
+* ...
 
 :::
 ::::::::::::::
@@ -248,3 +432,6 @@ Image is public domain
 ::: notes
 Image is public domain
 :::
+
+##
+
