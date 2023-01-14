@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Malte Neuss">
+  <title>Immutability &amp; Pure Functions</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/sky.css" id="theme">
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Immutability &amp; Pure Functions</h1>
+  <p class="author">Malte Neuss</p>
+</section>
+
+<section id="reasoning-about-code" class="slide level2">
+<h2>Reasoning about code</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>prices <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert prices[0] == 5</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>minPrice <span class="op">=</span> minimum(prices)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert  minPrice == 2</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># assert prices[0] == 5                       # Correct?</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   values.sort()                              <span class="co"># surprise</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> values[<span class="dv">0</span>]</span></code></pre></div>
+</div>
+</section>
+<section id="content" class="slide level2">
+<h2>Content</h2>
+<div>
+<ul>
+<li class="fragment">Immutability</li>
+<li class="fragment">Pure Functions</li>
+<li class="fragment">Reasoning</li>
+<li class="fragment">Referential transparency</li>
+<li class="fragment">OO vs FP</li>
+</ul>
+</div>
+<div class="fragment">
+<blockquote>
+<p><em>Less surprises, better reasoning about correctness</em></p>
+</blockquote>
+</div>
+</section>
+<section id="immutability" class="slide level2">
+<h2>Immutability</h2>
+<p>No mutation:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># values.sort()                            # mutation</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>   other <span class="op">=</span> <span class="bu">sorted</span>(values)                     <span class="co"># no mutation</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> other[<span class="dv">0</span>]</span></code></pre></div>
+<div class="fragment">
+<p>No reassign:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  value <span class="op">=</span> <span class="dv">1</span>                                   # Assign</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a># value <span class="op">=</span> <span class="dv">2</span>                                   # Reassign</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  other <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+</div>
+</section>
+<section id="reasoning" class="slide level2">
+<h2>Reasoning</h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># values.sort()                            # surprise</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="bu">sorted</span> <span class="op">=</span> sort(values)                      <span class="co"># no surprise</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> <span class="bu">sorted</span>[<span class="dv">0</span>]</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prices <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">7</span>]                            <span class="co"># If immutable       </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>minPrice <span class="op">=</span> minimum(prices)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> prices[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">5</span>                         <span class="co"># Guaranteed     </span></span></code></pre></div>
+</div>
+</section>
+<section id="type-checker-support" class="slide level2">
+<h2>Type Checker Support</h2>
+<blockquote>
+<p><em>Automation &gt; Discipline</em></p>
+</blockquote>
+</section>
+<section id="immutable-built-in-classes" class="slide level2">
+<h2>Immutable built-in classes</h2>
+<p>Immutable interface:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mySet <span class="op">=</span> <span class="bu">frozenset</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])                  <span class="co"># Python</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mySet.add(<span class="dv">4</span>)                                  <span class="co"># type error</span></span></code></pre></div>
+<div class="fragment">
+<p>Copy on change:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> myList <span class="op">=</span> immutable<span class="op">.</span><span class="ex">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span>              # Scala</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> other  <span class="op">=</span> myList<span class="op">.</span><span class="fu">appended</span><span class="op">(</span><span class="dv">4</span><span class="op">)</span>                   # <span class="kw">new</span> list</span></code></pre></div>
+</div>
+</section>
+<section id="immutable-custom-classes" class="slide level2">
+<h2>Immutable custom classes</h2>
+<p>Immutable interface around mutable data:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass:                                </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>   _value: <span class="bu">int</span>                                <span class="co"># hide mutables</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> getValue()                             <span class="co"># no setters</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> _value</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> calcSth()                              <span class="co"># _value read only</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> _value<span class="op">*</span><span class="dv">2</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> incremented()                          <span class="co"># Copy on change</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> MyClass(_value<span class="op">+</span><span class="dv">1</span>)</span></code></pre></div>
+</section>
+<section id="immutable-custom-classes-1" class="slide level2">
+<h2>Immutable custom classes</h2>
+<p>With extra language support:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span>(frozen<span class="op">=</span><span class="va">True</span>)                       <span class="co"># Python</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass:</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   value: <span class="bu">int</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>       <span class="op">=</span> MyClass(<span class="dv">1</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>.value <span class="op">=</span> <span class="dv">2</span>                              <span class="co"># compile error!</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> MyInterface {                       # Typescript</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> value<span class="op">:</span> int<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</section>
+<section id="immutable-variables" class="slide level2">
+<h2>Immutable variables</h2>
+<p>Mutable:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>var value <span class="op">=</span> <span class="dv">1</span>                                 <span class="co"># Typescript</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span>                                     <span class="co"># ok</span></span></code></pre></div>
+<div class="fragment">
+<p>Immutable:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>const value <span class="op">=</span> <span class="dv">1</span>                               <span class="co"># Typescript</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span>                                     <span class="co"># type error!</span></span></code></pre></div>
+</div>
+</section>
+<section id="pure-functions" class="slide level2">
+<h2>Pure Functions</h2>
+<p><span class="math display">
+\begin{align*}
+f\colon \mathbb{R} &amp;\to \mathbb{R} \qquad &amp;\text{Type} \\
+f(x)    &amp;= x + \pi                  \qquad &amp;\text{Body}
+\end{align*}
+</span></p>
+<div class="fragment">
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:                     <span class="co"># Type</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> x <span class="op">+</span> math.pi                         <span class="co"># Body</span></span></code></pre></div>
+<div>
+<ul>
+<li class="fragment">Same input, same output</li>
+<li class="fragment">No side-effects
+<ul>
+<li class="fragment">No (observable) mutation</li>
+<li class="fragment">No I/O, network, exceptions etc.</li>
+<li class="fragment">External constants ok</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="side-effect-global-mutation" class="slide level2">
+<h2>Side-Effect: Global Mutation</h2>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>counter <span class="op">=</span> <span class="dv">0</span>                                   <span class="co"># Global variable</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_pi(x)                                </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>   counter <span class="op">+=</span> <span class="dv">1</span>                               <span class="co"># Mutation</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> x <span class="op">+</span> math.pi                         </span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># assert counter == 0</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> add_pi(<span class="dv">9</span>)                                 <span class="co"># Hidden mutation</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># assert counter == 0                           # No</span></span></code></pre></div>
+</div>
+</section>
+<section id="side-effect-class-mutation" class="slide level2">
+<h2>Side-Effect: Class Mutation</h2>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  counter <span class="op">=</span> <span class="dv">0</span>                                 <span class="co"># Class variable</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> add_pi(x)                                </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    this.counter <span class="op">+=</span> <span class="dv">1</span>                         <span class="co"># Mutation</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">+</span> math.pi                         </span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span> <span class="op">=</span> MyClass(<span class="dv">0</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert object.counter == 0</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="bu">object</span>.add_pi(<span class="dv">9</span>)                          <span class="co"># Hidden mutation</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert object.counter == 0                  # No</span></span></code></pre></div>
+</div>
+</section>
+<section id="referential-transparency" class="slide level2">
+<h2>Referential transparency</h2>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  state: <span class="bu">int</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> </span></code></pre></div>
+</section>
+<section id="basic-types" class="slide level2">
+<h2>Basic Types</h2>
+<pre><code>type Void:                      // 0
+type Unit: unit                 // 1
+type Bool: true, false          // 2
+...
+type String: &quot;&quot;, &quot;a&quot;, &quot;b&quot; ...   // infty</code></pre>
+</section>
+<section id="product-type" class="slide level2">
+<h2>Product Type</h2>
+<pre><code>type ProductType = Type x Type</code></pre>
+<div class="fragment">
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> User <span class="op">=</span> Bool x String</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> User </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  verified: Bool</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  email:    String</span></code></pre></div>
+</div>
+</section>
+<section id="product-type-1" class="slide level2">
+<h2>Product Type</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Type:</p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> User <span class="op">=</span> Bool x String</span></code></pre></div>
+<p>Values:</p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>User(true,  <span class="st">&quot;no@reply.com&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>User(false, <span class="st">&quot;no@reply.com&quot;</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>User(true,  <span class="st">&quot;ok@reply.com&quot;</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>User(false, <span class="st">&quot;ok@reply.com&quot;</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/cartesian-product.svg" style="width:90.0%" /></p>
+<p><small style="font-size: 9pt"> By Quartl - Own work, CC BY-SA 3.0,
+https://commons.wikimedia.org/w/index.php?curid=22436861 </small></p>
+</div>
+</div>
+</section>
+<section id="algebra" class="slide level2">
+<h2>Algebra</h2>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Bool x Bool: (true,true) (false,false) (true,false) (false,true)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">2</span> x <span class="dv">2</span>   <span class="op">=</span>  <span class="dv">4</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Bool x Unit: (true,unit) (false,unit)    <span class="op">~</span> Boolean</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">2</span> x <span class="dv">1</span>   <span class="op">=</span>  <span class="dv">2</span>                              </span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Bool x Void: (true,???)                  <span class="op">~</span> Void</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">2</span> x <span class="dv">0</span>   <span class="op">=</span>  <span class="dv">0</span></span></code></pre></div>
+</div>
+</section>
+<section id="sum-type" class="slide level2">
+<h2>Sum Type</h2>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> SumType <span class="op">=</span> Type <span class="op">+</span> Type</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> ID <span class="op">=</span> Int <span class="op">+</span> String</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> ID <span class="op">=</span> Int <span class="op">|</span> String                           Typescript</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>     ID <span class="op">=</span> Union[<span class="bu">int</span>, <span class="bu">str</span>]                        Python</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sealed trait ID                                  Scala</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> IntID(Int)       extends ID</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> StringID(String) extends ID</span></code></pre></div>
+</div>
+</section>
+<section id="sum-type-1" class="slide level2">
+<h2>Sum Type</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Type:</p>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> ID <span class="op">=</span> Int <span class="op">|</span> String</span></code></pre></div>
+<p>Values:</p>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>myID: ID <span class="op">=</span> <span class="dv">1</span>                   ✓</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>myID: ID <span class="op">=</span> <span class="st">&quot;123e4567-e89b...&quot;</span>  ✓</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/disjoint-sets.svg" style="width:40.0%" /></p>
+<p><small style="font-size: 9pt"> By Stephan Kulla (User:Stephan Kulla)
+- Own work, CC BY 3.0,
+https://commons.wikimedia.org/w/index.php?curid=14978640 </small></p>
+</div>
+</div>
+</section>
+<section id="algebra-1" class="slide level2">
+<h2>Algebra</h2>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Bool <span class="op">|</span> Unit: true, false, unit</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span>   <span class="op">=</span>  <span class="dv">3</span> </span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Bool <span class="op">|</span> Void: true, false          <span class="op">~</span> Bool</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">2</span> <span class="op">+</span> <span class="dv">0</span>   <span class="op">=</span>  <span class="dv">2</span>                     <span class="dv">2</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Bool <span class="op">|</span> Int:  true, false, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, ...</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>   <span class="dv">2</span> <span class="op">+</span> <span class="dv">2</span><span class="op">^</span><span class="dv">64</span>  </span></code></pre></div>
+</div>
+</section>
+<section id="unit-type" class="slide level2">
+<h2>Unit Type</h2>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> BoolOpt     <span class="op">=</span> Bool <span class="op">|</span> Unit </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> Optional[T] <span class="op">=</span>   T  <span class="op">|</span> Unit </span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Optional[T] <span class="op">=</span>    T <span class="op">|</span> <span class="dt">undefined</span>              Typescript</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>     Optional[T] <span class="op">=</span> Union[T, NoneType]            Python</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode scala"><code class="sourceCode scala"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sealed</span> <span class="kw">trait</span> <span class="ex">Option</span><span class="op">[</span>A<span class="op">]</span>                           Scala</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span>  <span class="bu">Some</span><span class="op">[</span>A<span class="op">]</span> <span class="kw">extends</span> <span class="ex">Option</span><span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">object</span> <span class="bu">None</span>    <span class="kw">extends</span> <span class="ex">Option</span><span class="op">[</span>A<span class="op">]</span></span></code></pre></div>
+</div>
+</section>
+<section id="examples" class="slide level2">
+<h2>Examples</h2>
+<p>Modelling Data</p>
+<blockquote>
+<p>Make illegal state unrepresentable</p>
+</blockquote>
+</section>
+<section id="no-adt-error-codes" class="slide level2">
+<h2>No ADT: Error codes</h2>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> UserResult:</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  error_code: <span class="bu">int</span>             <span class="co"># 0 means ok</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  user:       User            <span class="co"># contains dummy data on error</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetchUser() <span class="op">-&gt;</span> UserResult:</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># network call</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> myUser.error_code <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do sth.</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># what if myUser.user still has dummy data?</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do fallback</span></span></code></pre></div>
+</div>
+</section>
+<section id="no-adt-error-codes-1" class="slide level2">
+<h2>No ADT: Error codes</h2>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> UserResult:</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  error_code: <span class="bu">int</span>             <span class="co"># 0 means ok</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  user:       User            <span class="co"># contains dummy data on error</span></span></code></pre></div>
+<div class="fragment">
+<p>Representable valid values:</p>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>UserResult(<span class="dv">0</span>, User(<span class="st">&quot;John&quot;</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>UserResult(<span class="dv">0</span>, User(<span class="st">&quot;Jane&quot;</span>))</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>UserResult(<span class="dv">1</span>, User(<span class="st">&quot;dummy&quot;</span>))</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+</div>
+<div class="fragment">
+<p>Representable invalid values:</p>
+<pre><code>UserResult(1, User(&quot;John&quot;))
+UserResult(0, User(&quot;dummy&quot;))</code></pre>
+</div>
+</section>
+<section id="no-adt-exceptions" class="slide level2">
+<h2>No ADT: Exceptions</h2>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetchUser() <span class="op">-&gt;</span> User:</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># raise Exception on error</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># do sth.</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb52"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do sth.</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> ...</span></code></pre></div>
+</div>
+</section>
+<section id="adt-optional" class="slide level2">
+<h2>ADT: Optional</h2>
+<div class="sourceCode" id="cb53"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> Optional[T] <span class="op">=</span> NoneType <span class="op">|</span> T</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetchUser() <span class="op">-&gt;</span> Optional[User]:</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return None on error</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb54"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>   <span class="bu">isinstance</span>(myUser, User):</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do sth.</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">isinstance</span>(myUser, NoneType):</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do fallback</span></span></code></pre></div>
+</div>
+</section>
+<section id="adt-either" class="slide level2">
+<h2>ADT: Either</h2>
+<div class="sourceCode" id="cb55"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> Either[E,T] <span class="op">=</span> E <span class="op">|</span> T</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetchUser() <span class="op">-&gt;</span> Either[Error, User]:</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return Error value on error</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb56"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>   <span class="bu">isinstance</span>(myUser, User):</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do sth.</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">isinstance</span>(myUser, Error):</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># analyze reason</span></span></code></pre></div>
+</div>
+</section>
+<section id="adt-custom" class="slide level2">
+<h2>ADT: Custom</h2>
+<div class="sourceCode" id="cb57"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> User <span class="op">=</span> Anonymous <span class="op">|</span> LoggedIn</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetchUser() <span class="op">-&gt;</span> User:</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb58"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>   <span class="bu">isinstance</span>(myUser, Anonymous):</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do anonymous stuff.</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">isinstance</span>(myUser, LoggedIn):</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do logged-in stuff.</span></span></code></pre></div>
+</div>
+</section>
+<section id="adt-custom-extended" class="slide level2">
+<h2>ADT: Custom extended</h2>
+<div class="sourceCode" id="cb59"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> User <span class="op">=</span> Anonymous <span class="op">|</span> LoggedIn <span class="op">|</span> Admin</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="co"># !new!</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetchUser() <span class="op">-&gt;</span> User:</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb60"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>myUser <span class="op">=</span> fetchUser()</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>   <span class="bu">isinstance</span>(myUser, Anonymous):</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do anonymous stuff.</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">isinstance</span>(myUser, LoggedIn):</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># do logged-in stuff.</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="op">!!!</span> Compiler error: forgot Admin case <span class="op">!!!</span></span></code></pre></div>
+</div>
+</section>
+<section id="further-topics" class="slide level2">
+<h2>Further Topics</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Scala</li>
+<li>Haskell</li>
+<li>Rust</li>
+<li>Dependent Types</li>
+<li>Linear Types</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><small> Category Theory </small></p>
+<p><img data-src="img/category_theory.svg" style="width:50.0%" /></p>
+<ul>
+<li>Functor (map)</li>
+<li>Monad (flatMap)</li>
+<li>…</li>
+</ul>
+</div>
+</div>
+<aside class="notes">
+<p>Image is public domain</p>
+</aside>
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+<p>Thanks</p>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
