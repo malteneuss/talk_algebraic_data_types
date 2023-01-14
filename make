@@ -1,2 +1,2 @@
 # Autorecompile on file changes
-watchexec -e md "pandoc -t revealjs -s -o slides.html slides.md -V revealjs-url=./reveal.js -V theme=sky"
+watchexec -e md "pandoc --to revealjs --filter pandoc-plantuml --standalone talk-algebraic-data-types.md --output talk-algebraic-data-types.html"
