@@ -45,7 +45,7 @@ def minimum(values)
 
 * Immutability
 * Pure Functions
-* Both in OO
+* Apply to OO
 
 :::
 
@@ -254,121 +254,197 @@ def length(list: [Any]) -> Int
 
 Types often enough for understanding.
 
-## Effect: Global Mutation
+## Impure Functions
 
 ```python
-prices                                        # Global variable
-
-def minPrice()                                
-   prices.sort()                              # Mutation
-   return prices[0]
+def f() -> None
 ```
 
 . . .
 
 ```python
-prices = [5,2,7]                              # Init variable
-# assert prices[0] == 5
+def performTask() -> None
+  inputs = loadInputs()
+  computeResult(inputs)
 ```
+
 . . .
 
 ```python
-x = minPrice()                                # Hidden mutation
-# assert prices[0] == 5                       # No
+def launchMissiles() -> None
+  coord = loadCoordinates()
+  ...
 ```
 
-## Effect: Class Mutation
+Need to look at body to be sure.
+
+## Classical OO
 
 ```python
 class MyClass
-  prices                                      # Class variable
-
-  def minPrice()                                
-    this.prices.sort()                        # Hidden mutation
-    return this.prices[0]                         
+  state: LotsOfState                          # private
 ```
 
 . . .
 
 ```python
-object = MyClass([5,2,7])                     # Init variable
-# assert object.prices[0] == 5
+  def do() -> None                            # public
+    state.do_a()   
+    state.do_b()  
+    this._do()   
 ```
 
 . . .
 
 ```python
-x = object.minPrice()                         # Hidden mutation
-# assert object.prices[0] == 5                # No
+  def _do()                                   # private
+    state.do_c()
+    ...
 ```
 
-## Impure Methods
+## Classical OO
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
 
 ```python
 class MyClass
-  state=ComplexState()                        # 100s variables
+  state: LotsOfState
 
-  def do() -> None                            # Announced mutation 
-    state.change()                            # Mutation
-    state.change_more()                       # Mutation
-    this._do()                                # Mutation
-  
-  def _do()                                   # Impure
-    state.change_even_more()                  # Mutation
+  def do() -> None
+    state.do_a()
+    state.do_b()
+    this._do()
+
+  def _do()
+    state.do_c()
+    ...
 ```
+
+:::
+::: {.column width="50%"}
+
+```plantuml
+@startuml
+class MyClass
+MyClass : state: A
+MyClass : state: B
+MyClass : do()
+
+together {
+class A
+A : state: C
+A : do_a()
+
+class B
+B : state
+B : do_b()
+}
+class C
+C : state
+C : do_c()
+
+MyClass --r-> A
+MyClass ---r--> B
+A       -r-> C
+A       -[hidden]d-> B
+@enduml
+```
+
+:::
+::::::::::::::
 
 . . .
 
 ```python
-object = MyClass()                            # Init variable
-# assert object.state == ComplexState()
+...
+myClass.do()
+...
 ```
 
-. . .
-
-```python
-object.do()                                  # Announced mutation
-# assert object.state == no clue
-```
-
-## Pure Methods
+## FP-ish OO
 
 ```python
 class MyClass
+  constants
+```
 
-  def do(state)                               # Pure 
-    x = change(state)                         # No mutation
-    y = change_more(x)                        # No mutation
+. . .
+
+```python
+  def do(start)                               # Pure 
+    x = do_a(start)                           # No mutation
+    y = do_b(x, constants)                    # No mutation
     z = this._do(y)                           # No mutation
     return z
+```
+
+. . .
+
+```python
   
-  def _do(y)                                  # Impure
-    return change_even_more(y)                # Mutation
+  def _do(y)                                  # Pure
+    return do_c(y, constants)                 # No mutation
+```
+
+## Global Mutation
+
+```python
+state: LotsOfState                            # Global variable
 ```
 
 . . .
 
 ```python
-state = ComplexState()                        # Init variable
-# assert state == ComplexState()
+def someOperation()                                
+   state.do_a()                               # Global mutation
 ```
 
 . . .
 
 ```python
-x = MyClass.do(state)                         # No mutation
-# assert state == ComplexState()
+def main()                                
+   ...
+   someOperation()                             
+   ...
 ```
 
-## Why Immutable Classes
+## Class Mutation
+
+```python
+class MyClass
+  state: LotsOfState                          # Class variable
+```
+
+. . .
+
+```python
+  def someOperation()                                
+    state.do_a()                              # Class mutation
+```
+
+. . .
+
+```python
+def main()                                
+   ...
+   myClass.someOperation()                             
+   ...
+```
+
+## Output arguments
 
 Not ok:
 
 ```python
-def do(state):
-  # ... change state
+def do(state):                 
+  # ... modify argument 'state'
+```
 
-x = do(state)                                 # state mutated
+. . .
+
+```python
+x = do(state)                                 # 'state' mutated
 ```
 
 . . .
@@ -376,7 +452,7 @@ x = do(state)                                 # state mutated
 So why should this?
 
 ```python
-x = state.do()                                # state mutated
+x = state.do()                                # 'state' mutated
 ```
 
 . . .
@@ -384,17 +460,45 @@ x = state.do()                                # state mutated
 ```python
 class State:
 
-    def do(self):                             # self == state
-      # ... change self                         
+    def do(self):                             # 'self' is 'state'
+      # ... modify argument self
 ```
+
+## How to Side-Effects
+
+```python
+def performTask()                 
+  inputs = fetchInputs()                      # IO
+  result = 2*inputs                            
+  publish(result)                             # IO
+```
+
+. . .
+
+```python
+# Infrastructure/Application layer            # Impure
+def performTask()                 
+  inputs = fetchInputs()                      
+  result = domainLogic(inputs)                
+  publish(result)                            
+
+# Domain layer
+def domainLogic(inputs)                       # Pure
+  return 2*inputs
+  
+```
+
+> *Separate IO and logic*
 
 
 ## Further Topics
+
 :::::::::::::: {.columns}
 ::: {.column width="50%"}
 
 Try 
 
+* Scala
 * Rust
 * Haskell
 
@@ -407,10 +511,10 @@ Category Theory
 
 ![](img/category_theory.svg){ width=40% }
 
+* Algebraic Data Types
 * Functor (map)
 * Monad (flatMap)
-* Lens
-* ...
+* Lens ...
 
 :::
 ::::::::::::::
@@ -503,11 +607,3 @@ Immutable:
 const value = 1                               // Typescript
 value = 2                                     // type error!
 ```
-
-
-## TODO
-map filter refactoring example
-
-cascading object mutation example
-
-separate IO from domain logic pure function

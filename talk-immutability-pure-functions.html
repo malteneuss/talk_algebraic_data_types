@@ -126,7 +126,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 </div>
 <div class="fragment">
 <div class="sourceCode" id="cb3"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5                     # Correct?</span></span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5?</span></span></code></pre></div>
 </div>
 <div class="fragment">
 <div class="sourceCode" id="cb4"><pre
@@ -141,112 +141,44 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a hr
 <ul>
 <li class="fragment">Immutability</li>
 <li class="fragment">Pure Functions</li>
-<li class="fragment">OO vs FP Styles</li>
-<li class="fragment">Reasoning</li>
-<li class="fragment">Referential Transparency</li>
+<li class="fragment">Apply to OO</li>
 </ul>
 </div>
 <div class="fragment">
 <blockquote>
-<p><em>Easier reasoning, less invalid state</em></p>
+<p><em>Easier reasoning, testing, debugging..</em></p>
 </blockquote>
 </div>
 </section>
 <section id="immutability" class="slide level2">
 <h2>Immutability</h2>
-<p>No mutation:</p>
+<p>No reassign of variables:</p>
 <div class="sourceCode" id="cb5"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># values.sort()                            # mutation</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   other <span class="op">=</span> <span class="bu">sorted</span>(values)                     <span class="co"># no mutation</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> other[<span class="dv">0</span>]</span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  value <span class="op">=</span> <span class="dv">1</span>                                   <span class="co"># Assign</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># value = 2                                   # Reassign</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  other <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
 <div class="fragment">
-<p>No reassign:</p>
+<p>No mutation on objects:</p>
 <div class="sourceCode" id="cb6"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>  value <span class="op">=</span> <span class="dv">1</span>                                   <span class="co"># Assign</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># value = 2                                   # Reassign</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  other <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># values.sort()                            # mutation</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   other <span class="op">=</span> <span class="bu">sorted</span>(values)                     <span class="co"># no mutation</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> other[<span class="dv">0</span>]</span></code></pre></div>
 </div>
 </section>
-<section id="reasoning" class="slide level2">
-<h2>Reasoning</h2>
+<section id="benefit-reasoning" class="slide level2">
+<h2>Benefit: Reasoning</h2>
 <div class="sourceCode" id="cb7"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># values.sort()                            # surprise</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   other <span class="op">=</span> <span class="bu">sorted</span>(values)                     <span class="co"># no surprise</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> other[<span class="dv">0</span>]</span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="op">=</span> immutable([<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">7</span>])                 <span class="co"># if supported</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5                     </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  minPrice <span class="op">=</span> minimum(prices)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5!                    </span></span></code></pre></div>
 <div class="fragment">
 <div class="sourceCode" id="cb8"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main()</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="op">=</span> [<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">7</span>]                            <span class="co"># If immutable,       </span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5                     </span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  minPrice <span class="op">=</span> minimum(prices)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5                     # Guaranteed     </span></span></code></pre></div>
-</div>
-</section>
-<section id="type-checker-support" class="slide level2">
-<h2>Type Checker Support</h2>
-<blockquote>
-<p><em>Make illegal state (more) unrepresentable</em></p>
-</blockquote>
-</section>
-<section id="immutable-built-in-classes" class="slide level2">
-<h2>Immutable Built-in Classes</h2>
-<p>Immutable interface:</p>
-<div class="sourceCode" id="cb9"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mySet <span class="op">=</span> <span class="bu">frozenset</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])                  <span class="co"># Python</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mySet.add(<span class="dv">4</span>)                                  <span class="co"># type error</span></span></code></pre></div>
-<div class="fragment">
-<p>Copy on change:</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> myList <span class="op">=</span> immutable<span class="op">.</span><span class="ex">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span>          <span class="co">// Scala</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> other  <span class="op">=</span> myList<span class="op">.</span><span class="fu">appended</span><span class="op">(</span><span class="dv">4</span><span class="op">)</span>               <span class="co">// other list</span></span></code></pre></div>
-</div>
-</section>
-<section id="immutable-custom-classes" class="slide level2">
-<h2>Immutable Custom Classes</h2>
-<p>Immutable interface around mutable data:</p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass:                                </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   _value: <span class="bu">int</span>                                <span class="co"># hide mutables</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> getValue()                             <span class="co"># no setters</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> _value</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> calcSth()                              <span class="co"># _value read only</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> _value<span class="op">*</span><span class="dv">2</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> incremented()                          <span class="co"># Copy on change</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> MyClass(_value<span class="op">+</span><span class="dv">1</span>)</span></code></pre></div>
-</section>
-<section id="immutable-custom-classes-1" class="slide level2">
-<h2>Immutable Custom Classes</h2>
-<p>With extra language support:</p>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span>(frozen<span class="op">=</span><span class="va">True</span>)                       <span class="co"># Python</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass:</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   value: <span class="bu">int</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>       <span class="op">=</span> MyClass(<span class="dv">1</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>.value <span class="op">=</span> <span class="dv">2</span>                              <span class="co"># compile error!</span></span></code></pre></div>
-<div class="fragment">
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> MyInterface {                       <span class="co">// Typescript</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> value<span class="op">:</span> int<span class="op">;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-</div>
-</section>
-<section id="immutable-variables" class="slide level2">
-<h2>Immutable Variables</h2>
-<p>Mutable:</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> value <span class="op">=</span> <span class="dv">1</span>                                 <span class="co">// Typescript</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span>                                     <span class="co">// ok</span></span></code></pre></div>
-<div class="fragment">
-<p>Immutable:</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> value <span class="op">=</span> <span class="dv">1</span>                               <span class="co">// Typescript</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span>                                     <span class="co">// type error!</span></span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>   values.sort()                              <span class="co"># error</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> other[<span class="dv">0</span>]</span></code></pre></div>
 </div>
 </section>
 <section id="pure-functions" class="slide level2">
@@ -258,9 +190,9 @@ f(x)    &amp;= x + \pi                  \qquad &amp;\text{Body}
 \end{align*}
 </span></p>
 <div class="fragment">
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:                     <span class="co"># Type</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> x <span class="op">+</span> math.pi                         <span class="co"># Body</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:                     <span class="co"># Type</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> x <span class="op">+</span> math.pi                         <span class="co"># Body</span></span></code></pre></div>
 <div>
 <ul>
 <li class="fragment">Same input, same output</li>
@@ -274,145 +206,68 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a h
 <h2>Side-Effect</h2>
 <div>
 <ul>
-<li class="fragment">File read call</li>
-<li class="fragment">File write call</li>
-<li class="fragment">Network call</li>
-<li class="fragment">I/O call</li>
+<li class="fragment">File read/write</li>
+<li class="fragment">Network access</li>
+<li class="fragment">I/O</li>
 <li class="fragment">Throwing exception</li>
-<li class="fragment">(Observable) mutation</li>
+<li class="fragment">Argument mutation</li>
 <li class="fragment">…</li>
 </ul>
 </div>
 <div class="fragment">
 <blockquote>
-<p><em>Every state change outside of function</em></p>
+<p><em>Any state change outside of return value</em></p>
 </blockquote>
-<div class="sourceCode" id="cb17"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span></span></code></pre></div>
 </div>
 </section>
-<section id="effect-global-mutation" class="slide level2">
-<h2>Effect: Global Mutation</h2>
-<div class="sourceCode" id="cb18"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>prices                                        <span class="co"># Global variable</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minPrice()                                </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>   prices.sort()                              <span class="co"># Mutation</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> prices[<span class="dv">0</span>]</span></code></pre></div>
+<section id="benefit-reasoning-1" class="slide level2">
+<h2>Benefit: Reasoning</h2>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minimum(values)                           <span class="co"># pure</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># values.sort()                             </span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   other <span class="op">=</span> <span class="bu">sorted</span>(values)                     <span class="co"># no mutation</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> other[<span class="dv">0</span>]</span></code></pre></div>
 <div class="fragment">
-<div class="sourceCode" id="cb19"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>prices <span class="op">=</span> [<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">7</span>]                              <span class="co"># Init variable</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert prices[0] == 5</span></span></code></pre></div>
-</div>
-<div class="fragment">
-<div class="sourceCode" id="cb20"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> minPrice()                                <span class="co"># Hidden mutation</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert prices[0] == 5                       # No</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="op">=</span> [<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">7</span>]                            </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5                     </span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  minPrice <span class="op">=</span> minimum(prices)                  <span class="co"># pure</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assert prices[0] == 5!                    </span></span></code></pre></div>
 </div>
 </section>
-<section id="effect-class-mutation" class="slide level2">
-<h2>Effect: Class Mutation</h2>
-<div class="sourceCode" id="cb21"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  prices                                      <span class="co"># Class variable</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> minPrice()                                </span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    this.prices.sort()                        <span class="co"># Hidden mutation</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> this.prices[<span class="dv">0</span>]                         </span></code></pre></div>
+<section id="benefit-testing" class="slide level2">
+<h2>Benefit: Testing</h2>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test()                                    </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>   values   <span class="op">=</span> [<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">7</span>]                         <span class="co"># data        </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>   expected <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>   out <span class="op">=</span> minimum(values)                       <span class="co"># pure</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">assert</span> out <span class="op">==</span> expected </span></code></pre></div>
 <div class="fragment">
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span> <span class="op">=</span> MyClass([<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">7</span>])                     <span class="co"># Init variable</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert object.prices[0] == 5</span></span></code></pre></div>
-</div>
-<div class="fragment">
-<div class="sourceCode" id="cb23"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="bu">object</span>.minPrice()                         <span class="co"># Hidden mutation</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert object.prices[0] == 5                # No</span></span></code></pre></div>
+<blockquote>
+<p><em>cost(data) &lt; cost(classes)</em></p>
+</blockquote>
 </div>
 </section>
-<section id="oo-impure-style" class="slide level2">
-<h2>OO Impure Style</h2>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  state<span class="op">=</span>ComplexState()                        <span class="co"># 100s variables</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> do() <span class="op">-&gt;</span> <span class="va">None</span>                            <span class="co"># Announced mutation </span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    state.change()                            <span class="co"># Mutation</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    state.change_more()                       <span class="co"># Mutation</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    this._do()                                <span class="co"># Mutation</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> _do()                                   <span class="co"># Impure</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    state.change_even_more()                  <span class="co"># Mutation</span></span></code></pre></div>
-<div class="fragment">
-<div class="sourceCode" id="cb25"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span> <span class="op">=</span> MyClass()                            <span class="co"># Init variable</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert object.state == ComplexState()</span></span></code></pre></div>
-</div>
-<div class="fragment">
-<div class="sourceCode" id="cb26"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>.do()                                  <span class="co"># Announced mutation</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert object.state == no clue</span></span></code></pre></div>
-</div>
-</section>
-<section id="oo-fp-ish-style" class="slide level2">
-<h2>OO FP-ish Style</h2>
-<div class="sourceCode" id="cb27"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> do(state)                               <span class="co"># Pure </span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> change(state)                         <span class="co"># No mutation</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> change_more(x)                        <span class="co"># No mutation</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> this._do(y)                           <span class="co"># No mutation</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> _do(y)                                  <span class="co"># Impure</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> change_even_more(y)                <span class="co"># Mutation</span></span></code></pre></div>
-<div class="fragment">
-<div class="sourceCode" id="cb28"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> ComplexState()                        <span class="co"># Init variable</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert state == ComplexState()</span></span></code></pre></div>
-</div>
-<div class="fragment">
-<div class="sourceCode" id="cb29"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> MyClass.do(state)                         <span class="co"># No mutation</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># assert state == ComplexState()</span></span></code></pre></div>
-</div>
-</section>
-<section id="why-immutable-classes" class="slide level2">
-<h2>Why Immutable Classes</h2>
-<p>Not ok:</p>
-<div class="sourceCode" id="cb30"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> do(state):</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... change state</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> do(state)                                 <span class="co"># state mutated</span></span></code></pre></div>
-<div class="fragment">
-<p>So why should this?</p>
-<div class="sourceCode" id="cb31"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> state.do()                                <span class="co"># state mutated</span></span></code></pre></div>
-</div>
-<div class="fragment">
-<div class="sourceCode" id="cb32"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> State:</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> do(<span class="va">self</span>):                             <span class="co"># self == state</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ... change self                         </span></span></code></pre></div>
-</div>
-</section>
-<section id="pure-functions-1" class="slide level2">
-<h2>Pure Functions</h2>
+<section id="benefit-refactoring" class="slide level2">
+<h2>Benefit: Refactoring</h2>
 <p>Referential transparency:</p>
-<div class="sourceCode" id="cb33"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> compute(<span class="dv">5</span>,<span class="dv">2</span>) <span class="op">+</span> <span class="dv">7</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> compute(<span class="dv">5</span>,<span class="dv">2</span>) <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> compute(<span class="dv">5</span>,<span class="dv">2</span>) <span class="op">+</span> <span class="dv">7</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> compute(<span class="dv">5</span>,<span class="dv">2</span>) <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
 <div class="fragment">
 <p>=</p>
-<div class="sourceCode" id="cb34"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> compute(<span class="dv">5</span>,<span class="dv">2</span>)                            <span class="co"># Factored out</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> x            <span class="op">+</span> <span class="dv">7</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> x            <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> compute(<span class="dv">5</span>,<span class="dv">2</span>)                            <span class="co"># Factored out</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> x            <span class="op">+</span> <span class="dv">7</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> x            <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
 </div>
 <div class="fragment">
 <p>Fearless refactoring, also by compiler</p>
@@ -421,44 +276,225 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a h
 <section id="impure-functions" class="slide level2">
 <h2>Impure Functions</h2>
 <p>No referential transparency:</p>
-<div class="sourceCode" id="cb35"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():                                   <span class="co"># 2 side-effects</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> fetchNumber() <span class="op">+</span> <span class="dv">7</span>                        </span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> fetchNumber() <span class="op">+</span> <span class="dv">1</span>                      </span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():                                   <span class="co"># 2 side-effects</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> randomNumber() <span class="op">+</span> <span class="dv">7</span>                        </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> randomNumber() <span class="op">+</span> <span class="dv">1</span>                      </span></code></pre></div>
 <div class="fragment">
 <p>!=</p>
-<div class="sourceCode" id="cb36"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():                                   <span class="co"># 1 side-effect</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> fetchNumber()                           <span class="co"># Factored out</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> x             <span class="op">+</span> <span class="dv">7</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> x             <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():                                   <span class="co"># 1 side-effect</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> randomNumber()                          <span class="co"># Factored out</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> x              <span class="op">+</span> <span class="dv">7</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> x              <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
 </div>
 <div class="fragment">
 <p>Careful refactoring, often manual</p>
+</div>
+</section>
+<section id="benefit-abstraction" class="slide level2">
+<h2>Benefit: Abstraction</h2>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(_: Char) <span class="op">-&gt;</span> Int</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> toAscii(c: Char) <span class="op">-&gt;</span> Int</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(_: [Any]) <span class="op">-&gt;</span> Int</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> length(<span class="bu">list</span>: [Any]) <span class="op">-&gt;</span> Int</span></code></pre></div>
+<p>Types often enough for understanding.</p>
+</div>
+</section>
+<section id="impure-functions-1" class="slide level2">
+<h2>Impure Functions</h2>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f() <span class="op">-&gt;</span> <span class="va">None</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> performTask() <span class="op">-&gt;</span> <span class="va">None</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  inputs <span class="op">=</span> loadInputs()</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  computeResult(inputs)</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> launchMissiles() <span class="op">-&gt;</span> <span class="va">None</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  coord <span class="op">=</span> loadCoordinates()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
+<p>Need to look at body to be sure.</p>
+</div>
+</section>
+<section id="classical-oo" class="slide level2">
+<h2>Classical OO</h2>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  state: LotsOfState                          <span class="co"># private</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> do() <span class="op">-&gt;</span> <span class="va">None</span>                            <span class="co"># public</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    state.do_a()   </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    state.do_b()  </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    this._do()   </span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> _do()                                   <span class="co"># private</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    state.do_c()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
+</div>
+</section>
+<section id="classical-oo-1" class="slide level2">
+<h2>Classical OO</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  state: LotsOfState</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> do() <span class="op">-&gt;</span> <span class="va">None</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    state.do_a()</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    state.do_b()</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    this._do()</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> _do()</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    state.do_c()</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
+</div><div class="column" style="width:50%;">
+<p><img
+data-src="plantuml-images/9386d3751eaf14158eeb0f3212e7d36f6d734438.png" /></p>
+</div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>myClass.do()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+</div>
+</section>
+<section id="fp-ish-oo" class="slide level2">
+<h2>FP-ish OO</h2>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  constants</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> do(start)                               <span class="co"># Pure </span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> do_a(start)                           <span class="co"># No mutation</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> do_b(x, constants)                    <span class="co"># No mutation</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> this._do(y)                           <span class="co"># No mutation</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> _do(y)                                  <span class="co"># Pure</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> do_c(y, constants)                 <span class="co"># No mutation</span></span></code></pre></div>
+</div>
+</section>
+<section id="global-mutation" class="slide level2">
+<h2>Global Mutation</h2>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>state: LotsOfState                            <span class="co"># Global variable</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> someOperation()                                </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>   state.do_a()                               <span class="co"># Global mutation</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main()                                </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>   ...</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>   someOperation()                             </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>   ...</span></code></pre></div>
+</div>
+</section>
+<section id="class-mutation" class="slide level2">
+<h2>Class Mutation</h2>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  state: LotsOfState                          <span class="co"># Class variable</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> someOperation()                                </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    state.do_a()                              <span class="co"># Class mutation</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main()                                </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>   ...</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>   myClass.someOperation()                             </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>   ...</span></code></pre></div>
+</div>
+</section>
+<section id="output-arguments" class="slide level2">
+<h2>Output arguments</h2>
+<p>Not ok:</p>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> do(state):                 </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... modify argument &#39;state&#39;</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> do(state)                                 <span class="co"># &#39;state&#39; mutated</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<p>So why should this?</p>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> state.do()                                <span class="co"># &#39;state&#39; mutated</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> State:</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> do(<span class="va">self</span>):                             <span class="co"># &#39;self&#39; is &#39;state&#39;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ... modify argument self</span></span></code></pre></div>
+</div>
+</section>
+<section id="how-to-side-effects" class="slide level2">
+<h2>How to Side-Effects</h2>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> performTask()                 </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  inputs <span class="op">=</span> fetchInputs()                      <span class="co"># IO</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  result <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>inputs                            </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  publish(result)                             <span class="co"># IO</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Infrastructure/Application layer            # Impure</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> performTask()                 </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  inputs <span class="op">=</span> fetchInputs()                      </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  result <span class="op">=</span> domainLogic(inputs)                </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  publish(result)                            </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Domain layer</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> domainLogic(inputs)                       <span class="co"># Pure</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>inputs</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
+<blockquote>
+<p><em>Separate IO and logic</em></p>
+</blockquote>
 </div>
 </section>
 <section id="further-topics" class="slide level2">
 <h2>Further Topics</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p>Try Haskell</p>
+<p>Try</p>
 <ul>
-<li>All pure</li>
-<li>No mutation</li>
-</ul>
-<p>Try Rust:</p>
-<ul>
-<li>Much pure</li>
-<li>No mutation<br>by default</li>
+<li>Scala</li>
+<li>Rust</li>
+<li>Haskell</li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><small> Category Theory </small></p>
 <p><img data-src="img/category_theory.svg" style="width:40.0%" /></p>
 <ul>
+<li>Algebraic Data Types</li>
 <li>Functor (map)</li>
 <li>Monad (flatMap)</li>
-<li>Lens</li>
-<li>…</li>
+<li>Lens …</li>
 </ul>
 </div>
 </div>
@@ -466,9 +502,74 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a h
 <p>Image is public domain</p>
 </aside>
 </section>
-<section id="section" class="slide level2">
-<h2></h2>
+<section id="questions" class="slide level2">
+<h2>Questions?</h2>
 <p>Thanks</p>
+</section>
+<section id="type-checker-support" class="slide level2">
+<h2>Type Checker Support</h2>
+<blockquote>
+<p><em>Make illegal state (more) unrepresentable</em></p>
+</blockquote>
+</section>
+<section id="immutable-built-in-classes" class="slide level2">
+<h2>Immutable Built-in Classes</h2>
+<p>Immutable interface:</p>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>mySet <span class="op">=</span> <span class="bu">frozenset</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])                  <span class="co"># Python</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>mySet.add(<span class="dv">4</span>)                                  <span class="co"># type error</span></span></code></pre></div>
+<div class="fragment">
+<p>Copy on change:</p>
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode scala"><code class="sourceCode scala"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> myList <span class="op">=</span> immutable<span class="op">.</span><span class="ex">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span>          <span class="co">// Scala</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> other  <span class="op">=</span> myList<span class="op">.</span><span class="fu">appended</span><span class="op">(</span><span class="dv">4</span><span class="op">)</span>               <span class="co">// other list</span></span></code></pre></div>
+</div>
+</section>
+<section id="immutable-custom-classes" class="slide level2">
+<h2>Immutable Custom Classes</h2>
+<p>Immutable interface around mutable data:</p>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass:                                </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>   _value: <span class="bu">int</span>                                <span class="co"># hide mutables</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> getValue()                             <span class="co"># no setters</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> _value</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> calcSth()                              <span class="co"># _value read only</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> _value<span class="op">*</span><span class="dv">2</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>   <span class="kw">def</span> incremented()                          <span class="co"># Copy on change</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> MyClass(_value<span class="op">+</span><span class="dv">1</span>)</span></code></pre></div>
+</section>
+<section id="immutable-custom-classes-1" class="slide level2">
+<h2>Immutable Custom Classes</h2>
+<p>With extra language support:</p>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span>(frozen<span class="op">=</span><span class="va">True</span>)                       <span class="co"># Python</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyClass:</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>   value: <span class="bu">int</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>       <span class="op">=</span> MyClass(<span class="dv">1</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="bu">object</span>.value <span class="op">=</span> <span class="dv">2</span>                              <span class="co"># compile error!</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> MyInterface {                       <span class="co">// Typescript</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> value<span class="op">:</span> int<span class="op">;</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</section>
+<section id="immutable-variables" class="slide level2">
+<h2>Immutable Variables</h2>
+<p>Mutable:</p>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> value <span class="op">=</span> <span class="dv">1</span>                                 <span class="co">// Typescript</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span>                                     <span class="co">// ok</span></span></code></pre></div>
+<div class="fragment">
+<p>Immutable:</p>
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> value <span class="op">=</span> <span class="dv">1</span>                               <span class="co">// Typescript</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span>                                     <span class="co">// type error!</span></span></code></pre></div>
+</div>
 </section>
     </div>
   </div>

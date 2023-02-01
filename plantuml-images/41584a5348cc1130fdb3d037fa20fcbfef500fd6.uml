@@ -1,0 +1,24 @@
+@startuml
+class MyClass
+MyClass : state: A
+MyClass : state: B
+MyClass : do()
+
+together {
+class A
+A : state: C
+A : do_a()
+
+class B
+B : state: C
+B : do_b()
+}
+class C
+C : state
+C : do_c()
+
+MyClass --r-> A
+MyClass ---r--> B
+A       -r-> C
+A       -[hidden]d-> B
+@enduml
